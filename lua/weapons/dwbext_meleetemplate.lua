@@ -1,32 +1,29 @@
 -- basiccube's Default Weapon Base Extension
 -- Melee weapon template
 
-SWEP.PrintName = "Weapon Base Extension Melee Weapon" -- Weapon name in spawn menu and in weapon selection HUD.
+AddCSLuaFile()
+
+SWEP.PrintName = "DWBExt Melee" -- Weapon name in spawn menu and in weapon selection HUD.
 SWEP.Category = "Other" -- Spawn menu category.
 SWEP.Spawnable = true -- Make the weapon appear in the spawn menu.
 SWEP.AdminOnly = false -- Is the weapon spawnable only for admins?
-SWEP.Base = "weapon_base_extension" -- The base the weapon uses. Do not change this!
+SWEP.Base = "dwbext_base" -- The base the weapon uses. Do not change this!
 SWEP.WeaponIcon = "weapons/swep" -- Weapon icon in HUD.
 
 SWEP.WeaponType = "melee" -- Weapon type. Can be the following: generic, shotgun, melee.
 
-SWEP.MeleeSwingSound = Sound("weapons/iceaxe/iceaxe_swing1.wav")
-
 SWEP.Primary.Damage = 12 -- How much damage the primary attack does.
-SWEP.Primary.ClipSize = -1 -- Not used by melee weapon
-SWEP.Primary.Ammo = "none" -- Not used by melee weapon
-SWEP.Primary.DefaultClip = -1 -- Not used by melee weapon
 SWEP.Primary.Automatic = true -- Can you swing without having to press the primary attack again?
 SWEP.Primary.Delay = 0.4 -- How long do you have to wait before you can swing again?
 SWEP.Primary.Force = 1 -- The force of the swing.
 SWEP.Primary.MeleeDistance = 80 -- The max distance you can swing.
+SWEP.Primary.Sound = "Weapon_Crowbar.Single"
 
 -- The angle your view gets punched.
 SWEP.Primary.ViewPunchAngle = Angle( 1.0 * math.random(-0.5, -1.5),0,0 )
 
 SWEP.Slot = 0 -- Weapon slot. Can go from 0 to 5.
 SWEP.SlotPos = 2 -- How far down is the weapon in that slot?
-SWEP.DrawCrosshair = true -- Draw the crosshair?
 SWEP.DrawAmmo = false -- Not used by melee weapon
 SWEP.Weight = 5 -- The weight of the weapon.
 
@@ -40,10 +37,7 @@ SWEP.DrawSequence = "draw" -- The animation to play when deploying/selecting the
 SWEP.DrawPlaybackSpeed = 1 -- The speed to play the draw animation at.
 SWEP.DrawSequenceLength = 0.7 -- How long does the animation need to play before being able to swing.
 
-SWEP.HasDeploySound = false -- Does the weapon have a deploy sound to play during the draw animation? 
-
-SWEP.MeleeMissToIdleAnim = false -- Experimental. Moves the weapon back to its idle position after a miss.
-                                 -- Used by melee weapons that use HL2 crowbar animations.
-                                 -- Will cause issues when switching to another weapon after a swing.
+SWEP.MeleeMissToIdleAnim = true -- Moves the weapon back to its idle position after a miss.
+                                -- Used by melee weapons that use HL2 crowbar animations.
 
 SWEP.HoldType = "melee" -- Weapon hold type.

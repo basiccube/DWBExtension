@@ -1,23 +1,21 @@
 -- basiccube's Default Weapon Base Extension
 -- Pistol template
 
-SWEP.PrintName = "Weapon Base Extension Pistol" -- Weapon name in spawn menu and in weapon selection HUD.
+AddCSLuaFile()
+
+SWEP.PrintName = "DWBExt Pistol" -- Weapon name in spawn menu and in weapon selection HUD.
 SWEP.Category = "Other" -- Spawn menu category.
 SWEP.Spawnable = true -- Make the weapon appear in the spawn menu.
 SWEP.AdminOnly = false -- Is the weapon spawnable only for admins?
-SWEP.Base = "weapon_base_extension" -- The base the weapon uses. Do not change this!
+SWEP.Base = "dwbext_base" -- The base the weapon uses. Do not change this!
 SWEP.WeaponIcon = "weapons/swep" -- Weapon icon in HUD.
 
 SWEP.WeaponType = "generic" -- Weapon type. Can be the following: generic, shotgun, melee.
 
--- Weapon shoot sounds.
-SWEP.ShootSounds = {
-    "weapons/pistol/pistol_fire2.wav"
-}
 -- Sound that plays when the weapon clip is empty.
-SWEP.EmptySound = Sound("weapons/pistol/pistol_empty.wav")
+SWEP.EmptySound = "Weapon_Pistol.Empty"
 -- Reload sound if the viewmodel doesn't have one. Enable HasReloadSound for it to work.
-SWEP.ReloadSound = Sound("weapons/pistol/pistol_reload1.wav")
+SWEP.ReloadSound = "Weapon_Pistol.Reload"
 
 SWEP.Primary.Damage = 4 -- How much damage the primary attack does.
 SWEP.Primary.TakeAmmo = 1 -- How much ammo to take away when firing.
@@ -31,6 +29,7 @@ SWEP.Primary.Automatic = false -- Does the weapon automatically fire?
 SWEP.Primary.Recoil = 0.5 -- Weapon recoil.
 SWEP.Primary.Delay = 0.1 -- How long do you have to wait before you can shoot again?
 SWEP.Primary.Force = 4 -- Bullet force.
+SWEP.Primary.Sound = "Weapon_Pistol.Single" -- Weapon shoot sound.
 
 -- The angle your view gets punched.
 SWEP.Primary.ViewPunchAngle = Angle( -1.25,SWEP.Primary.Recoil * 1,SWEP.Primary.Recoil * -1 )
@@ -39,7 +38,6 @@ SWEP.ViewEyePunch = false -- Should your eye position move when firing?
 
 SWEP.Slot = 1 -- Weapon slot. Can go from 0 to 5.
 SWEP.SlotPos = 2 -- How far down is the weapon in that slot?
-SWEP.DrawCrosshair = true -- Draw the crosshair?
 SWEP.DrawAmmo = true -- Draw the ammo counter?
 SWEP.Weight = 5 -- The weight of the weapon.
 SWEP.AutoSwitchTo = false -- Switch to this weapon if the player runs out of ammo on their current weapon or gets this weapon.
@@ -55,11 +53,6 @@ SWEP.CSMuzzleFlashes = false -- Use CS:S muzzleflashes if the viewmodel is a CS:
 SWEP.DrawSequence = "draw" -- The animation to play when deploying/selecting the weapon.
 SWEP.DrawPlaybackSpeed = 1 -- The speed to play the draw animation at.
 SWEP.DrawSequenceLength = 0.7 -- How long does the animation need to play before being able to fire the weapon.
-
-SWEP.HasReloadSound = true -- Does the weapon have a reload sound? Use this if the viewmodel doesn't have a reload sound.
-SWEP.HasDeploySound = false -- Does the weapon have a deploy sound to play during the draw animation? 
-
-SWEP.AutoReload = true -- Auto reload. Will be replaced with an option that can be toggled on or off by the user.
 
 SWEP.HoldType = "pistol" -- Weapon hold type.
 
