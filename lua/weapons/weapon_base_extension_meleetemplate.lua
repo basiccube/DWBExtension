@@ -11,11 +11,6 @@ SWEP.WeaponIcon = "weapons/swep" -- Weapon icon in HUD.
 SWEP.WeaponType = "melee" -- Weapon type. Can be the following: generic, shotgun, melee.
 
 SWEP.MeleeSwingSound = Sound("weapons/iceaxe/iceaxe_swing1.wav")
-SWEP.MeleeHitSound = Sound("physics/flesh/flesh_impact_bullet1.wav")
-SWEP.MeleeHitSound2 = Sound("physics/flesh/flesh_impact_bullet2.wav")
-SWEP.MeleeHitSound3 = Sound("physics/flesh/flesh_impact_bullet3.wav")
-SWEP.MeleeHitSound4 = Sound("physics/flesh/flesh_impact_bullet4.wav")
-SWEP.MeleeHitSound5 = Sound("physics/flesh/flesh_impact_bullet5.wav")
 
 SWEP.Primary.Damage = 12 -- How much damage the primary attack does.
 SWEP.Primary.ClipSize = -1 -- Not used by melee weapon

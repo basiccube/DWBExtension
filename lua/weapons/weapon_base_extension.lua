@@ -1,5 +1,4 @@
 -- basiccube's Default Weapon Base Extension
--- Version 0.2.10
 
 SWEP.PrintName = "Default Weapon Base Extension"
 SWEP.Category = "Other"
@@ -12,20 +11,13 @@ SWEP.WeaponIcon = "weapons/swep"
 
 SWEP.WeaponType = "generic"
 
-SWEP.ShootSound = Sound("weapons/pistol/pistol_fire2.wav")
-SWEP.ShootSound2 = Sound("weapons/pistol/pistol_fire3.wav")
+SWEP.ShootSounds = {}
 SWEP.EmptySound = Sound("weapons/pistol/pistol_empty.wav")
 SWEP.ReloadSound = Sound("weapons/pistol/pistol_reload1.wav")
 SWEP.DeploySound = Sound("common/null.wav")
 SWEP.ShotgunPumpSound = Sound("weapons/shotgun/shotgun_cock.wav", 75, 100, 1, CHAN_ITEM)
 SWEP.ShotgunSecondarySound = Sound("weapons/shotgun/shotgun_dbl_fire7.wav")
-
 SWEP.MeleeSwingSound = Sound("weapons/iceaxe/iceaxe_swing1.wav")
-SWEP.MeleeHitSound = Sound("physics/flesh/flesh_impact_bullet1.wav")
-SWEP.MeleeHitSound2 = Sound("physics/flesh/flesh_impact_bullet2.wav")
-SWEP.MeleeHitSound3 = Sound("physics/flesh/flesh_impact_bullet3.wav")
-SWEP.MeleeHitSound4 = Sound("physics/flesh/flesh_impact_bullet4.wav")
-SWEP.MeleeHitSound5 = Sound("physics/flesh/flesh_impact_bullet5.wav")
 
 SWEP.Primary.Damage = 14
 SWEP.Primary.TakeAmmo = 1
@@ -82,7 +74,6 @@ SWEP.DeploySoundDelay = 0.5
 
 SWEP.HasReloadSound = true
 SWEP.HasDeploySound = false
-SWEP.MultipleShootSounds = false
 
 -- TODO: Add settings
 SWEP.AutoReload = true
@@ -92,6 +83,11 @@ SWEP.MeleeMissToIdleAnim = false
 SWEP.HoldType = "pistol"
 
 SWEP.FiresUnderwater = false
+
+function SWEP:PlayShootSounds()
+    local shootsoundrnd = math.random(1, #self.ShootSounds)
+    self:EmitSound(self.ShootSounds[shootsoundrnd])
+end
 
 function SWEP:Initialize()
     self:SetWeaponHoldType( self.HoldType )
@@ -130,19 +126,9 @@ function SWEP:PrimaryAttackGeneric()
     bullet.AmmoType = self.Primary.Ammo
 
     self:ShootEffects()
-
-    local ShootSoundRandom = math.random(1,2)
-
     self:GetOwner():FireBullets( bullet )
-    if (self.MultipleShootSounds == true) then
-        if (ShootSoundRandom == 1) then
-            self:EmitSound(self.ShootSound)
-        elseif (ShootSoundRandom == 2) then
-            self:EmitSound(self.ShootSound2)
-        end
-    else
-        self:EmitSound(self.ShootSound)
-    end
+
+    self:PlayShootSounds()
 
     if (!self:GetOwner():IsNPC()) then
         self:GetOwner():ViewPunch(self.Primary.ViewPunchAngle)
@@ -162,7 +148,7 @@ function SWEP:PrimaryAttackShotgun()
     if (!self:CanPrimaryAttack()) then return end
 
     if (self:Clip1() > 0) && (!(self:GetOwner():KeyDown(IN_ATTACK2))) then
-        self:EmitSound(self.ShootSound)
+        self:PlayShootSounds()
         self:SetNextPrimaryFire(CurTime() + self.Primary.Delay)
         self:SetNextSecondaryFire(CurTime() + self.Primary.Delay)
         self:TakePrimaryAmmo(self.Primary.TakeAmmo)
@@ -196,9 +182,11 @@ end
 function SWEP:PrimaryAttackMelee()
     self:SetNextPrimaryFire(CurTime() + self.Primary.Delay)
     local trace = self:GetOwner():GetEyeTrace()
+
     if trace.HitPos:Distance(self:GetOwner():GetShootPos()) <= self.Primary.MeleeDistance then
         self:GetOwner():SetAnimation( PLAYER_ATTACK1 )
         self:SendWeaponAnim(ACT_VM_HITCENTER)
+
         local bullet = {}
         bullet.Num = 1
         bullet.Src = self:GetOwner():GetShootPos()
@@ -208,26 +196,19 @@ function SWEP:PrimaryAttackMelee()
         bullet.Force  = self.Primary.Force
         bullet.Damage = self.Primary.Damage
         self:GetOwner():FireBullets(bullet)
-        local HitSoundRandom = math.random(1,2,3,4,5)
-        if (HitSoundRandom == 1) then
-            self:EmitSound(self.MeleeHitSound)
-        elseif (HitSoundRandom == 2) then
-            self:EmitSound(self.MeleeHitSound2)
-        elseif (HitSoundRandom == 3) then
-            self:EmitSound(self.MeleeHitSound3)
-        elseif (HitSoundRandom == 4) then
-            self:EmitSound(self.MeleeHitSound4)
-        elseif (HitSoundRandom == 5) then
-            self:EmitSound(self.MeleeHitSound5)
-        end
+
+        self:EmitSound("Weapon_Crowbar.Melee_Hit")
         self:EmitSound(self.MeleeSwingSound)
+
         if !self:GetOwner():IsNPC() then
             self:GetOwner():ViewPunch( self.Primary.ViewPunchAngle )
         end
     else
         self:EmitSound(self.MeleeSwingSound)
+
         self:GetOwner():SetAnimation( PLAYER_ATTACK1 )
         self:SendWeaponAnim(ACT_VM_MISSCENTER)
+
         if (self.MeleeMissToIdleAnim == true) then
             timer.Simple( 0.4, function() self:SendWeaponAnim(ACT_VM_IDLE) end )
         end
@@ -249,12 +230,12 @@ function SWEP:SecondaryAttackShotgun()
     return end
 
     if (self:Clip1() == 1) && (self:Clip1() > 0) && (!(self:GetOwner():KeyDown(IN_ATTACK))) then
-        self:EmitSound(self.ShootSound)
+        self:PlayShootSounds()
         self:SetNextPrimaryFire(CurTime() + self.Primary.Delay)
         self:SetNextSecondaryFire(CurTime() + self.Primary.Delay)
         self:TakePrimaryAmmo(self.Primary.TakeAmmo)
         self.StartReload = false
-        self:SetNWBool("reloading",false)
+        self:SetNWBool("reloading", false)
 
         self:ShootEffects()
         timer.Simple( 0.3, function() self:SendWeaponAnim(ACT_SHOTGUN_PUMP) end )
@@ -320,7 +301,7 @@ function SWEP:Reload()
         self:DefaultReload( ACT_VM_RELOAD );
     end
     if (self.WeaponType == "shotgun") then
-        if (self:GetNWBool("reloading",false)) then return end
+        if (self:GetNWBool("reloading", false)) then return end
         if (self:Clip1() <= self.Primary.ClipSize - 1 && self:Ammo1() >= 1) then
             self:SetNWBool("reloading",true)
             self:SetVar("reloadtimer",CurTime() + 0.2)
@@ -329,7 +310,7 @@ function SWEP:Reload()
 end
 
 function SWEP:Think()
-    if (self.WeaponType == "shotgun" && self:GetNWBool("reloading",false)) then
+    if (self.WeaponType == "shotgun" && self:GetNWBool("reloading", false)) then
         if self.StartReload == false then
             self.StartReload = true
             self.CanReload = false
@@ -359,7 +340,8 @@ function SWEP:Think()
             end
         end
     end
-    if (self.WeaponType == "generic" && self.AutoReload && self:GetOwner():Alive() && self:Clip1() <= 0 && self:Ammo1() > 0) then
+
+    if (self.WeaponType == "generic" && self:GetActivity() != ACT_VM_RELOAD && self.AutoReload && self:GetOwner():Alive() && self:Clip1() <= 0 && self:Ammo1() > 0) then
         self:Reload()
     end
 end

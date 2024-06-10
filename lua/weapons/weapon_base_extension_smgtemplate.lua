@@ -10,10 +10,10 @@ SWEP.WeaponIcon = "weapons/swep" -- Weapon icon in HUD.
 
 SWEP.WeaponType = "generic" -- Weapon type. Can be the following: generic, shotgun, melee.
 
--- First weapon shoot sound.
-SWEP.ShootSound = Sound("weapons/smg1/smg1_fire1.wav")
--- Second weapon shoot sound. Enable MultipleShootSounds for this to work.
-SWEP.ShootSound2 = Sound("weapons/smg1/smg1_fireburst1.wav")
+-- Weapon shoot sounds.
+SWEP.ShootSounds = {
+    "weapons/smg1/smg1_fire1.wav"
+}
 -- Sound that plays when the weapon clip is empty.
 SWEP.EmptySound = Sound("weapons/pistol/pistol_empty.wav")
 -- Reload sound if the viewmodel doesn't have one. Enable HasReloadSound for it to work.
@@ -58,7 +58,6 @@ SWEP.DrawSequenceLength = 0.7 -- How long does the animation need to play before
 
 SWEP.HasReloadSound = true -- Does the weapon have a reload sound? Use this if the viewmodel doesn't have a reload sound.
 SWEP.HasDeploySound = false -- Does the weapon have a deploy sound to play during the draw animation? 
-SWEP.MultipleShootSounds = false -- Does the weapon have multiple fire sounds?
 
 SWEP.AutoReload = true -- Auto reload. Will be replaced with an option that can be toggled on or off by the user.
 

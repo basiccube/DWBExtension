@@ -1,7 +1,7 @@
 # basiccube's Default Weapon Base Extension
 
-This repository contains an unfinished addon for Garry's Mod that is meant to be a simple extension of it's weapon base, it was originally created so that I don't have to fix one bug in generic shooty weapon #9431 and then fix that exact same bug in generic shooty weapon #9432 and so on.
+A work-in-progress and unfinished extension of Garry's Mod's weapon base.
 
-Funnily enough I never actually used this extension for anything ever, but that's probably due to other reasons.
+Originally created so that I don't have to fix one bug in generic shooty weapon #9431 and then fix that exact same bug in generic shooty weapon #9432 and so on.
 
-Since this is 2 years old, the code is awful and probably buggy and I don't recommend using it for anything, though I'm considering reviving it and actually turning it into something better, so that's at least something. Feel free to do anything with it IF you really want to.
+Due to this code being 2 years old by now, it's awful and also probably buggy in some way, though I'm working on updating this addon to be much better, so a lot of it will probably be reworked. Feel free to do anything with it if you really want to.
