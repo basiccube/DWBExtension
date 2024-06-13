@@ -12,8 +12,6 @@ SWEP.WeaponIcon = "weapons/swep" -- Weapon icon in HUD.
 
 SWEP.WeaponType = "generic" -- Weapon type. Can be the following: generic, shotgun, melee.
 
--- Sound that plays when the weapon clip is empty.
-SWEP.EmptySound = "Weapon_SMG1.Empty"
 -- Reload sound if the viewmodel doesn't have one. Enable HasReloadSound for it to work.
 SWEP.ReloadSound = "Weapon_SMG1.Reload"
 
@@ -50,9 +48,13 @@ SWEP.WorldModel = "models/weapons/w_smg1.mdl" -- Weapon worldmodel.
 SWEP.UseHands = false -- Use c_hands if the viewmodel supports it. Only works with c_ viewmodels, not v_ viewmodels!
 SWEP.CSMuzzleFlashes = false -- Use CS:S muzzleflashes if the viewmodel is a CS:S viewmodel.
 
-SWEP.DrawSequence = "draw" -- The animation to play when deploying/selecting the weapon.
-SWEP.DrawPlaybackSpeed = 1 -- The speed to play the draw animation at.
-SWEP.DrawSequenceLength = 0.7 -- How long does the animation need to play before being able to fire the weapon.
+SWEP.WeaponDeploy = {
+    Sequence = "draw",
+    Speed = 1,
+
+    Sound = "",
+    SoundDelay = 0.5,
+}
 
 SWEP.HoldType = "smg" -- Weapon hold type.
 

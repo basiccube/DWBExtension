@@ -13,9 +13,7 @@ SWEP.WeaponIcon = "weapons/swep"
 
 SWEP.WeaponType = "generic"
 
-SWEP.EmptySound = ""
 SWEP.ReloadSound = ""
-SWEP.DeploySound = ""
 SWEP.ShotgunPumpSound = ""
 
 SWEP.Primary.Damage = 14
@@ -33,7 +31,6 @@ SWEP.Primary.Delay = 0.1
 SWEP.Primary.Force = 5
 SWEP.Primary.MeleeDistance = 80
 SWEP.Primary.Sound = ""
-
 SWEP.Primary.ViewPunchAngle = Angle( SWEP.Primary.Recoil * math.random(-0.5,-2),0,0 )
 
 SWEP.ViewEyePunch = true
@@ -52,6 +49,7 @@ SWEP.Secondary.ShotgunRecoil = -3.25
 SWEP.Secondary.Delay = 1.0
 SWEP.Secondary.Force = 2
 SWEP.Secondary.Sound = ""
+SWEP.Secondary.ShotgunDouble = false
 
 SWEP.Slot = 2
 SWEP.SlotPos = 1
@@ -68,10 +66,13 @@ SWEP.WorldModel = "models/weapons/w_pistol.mdl"
 SWEP.UseHands = false
 SWEP.CSMuzzleFlashes = false
 
-SWEP.DrawSequence = "draw"
-SWEP.DrawPlaybackSpeed = 1
-SWEP.DrawSequenceLength = 1
-SWEP.DeploySoundDelay = 0.5
+SWEP.WeaponDeploy = {
+    Sequence = "draw",
+    Speed = 1,
+
+    Sound = "",
+    SoundDelay = 0.5,
+}
 
 SWEP.MeleeMissToIdleAnim = false
 
@@ -102,10 +103,9 @@ function SWEP:PrimaryAttackGeneric()
     if (!self:CanPrimaryAttack()) then return end
 
     if (self.FiresUnderwater == false && self:GetOwner():WaterLevel() == 3) then
-        self:EmitSound(self.EmptySound, 75, 100)
+        self:EmitSound("Weapon_Pistol.Empty")
         self:SetNextPrimaryFire( CurTime() + self.Primary.Delay )
-        return
-    end
+    return end
 
     local bullet = {}
     bullet.Num = self.Primary.NumberofShots
@@ -126,6 +126,7 @@ function SWEP:PrimaryAttackGeneric()
         self:GetOwner():ViewPunch(self.Primary.ViewPunchAngle)
         if (self.ViewEyePunch == true) then
             local ViewEyes = self:GetOwner():EyeAngles()
+
             ViewEyes.Pitch = ViewEyes.Pitch + self.Primary.ViewPunchAngle.Pitch
             ViewEyes.Yaw = ViewEyes.Yaw + self.Primary.ViewPunchAngle.Yaw
             self:GetOwner():SetEyeAngles(ViewEyes)
@@ -133,13 +134,14 @@ function SWEP:PrimaryAttackGeneric()
     end
 
     self:TakePrimaryAmmo(self.Primary.TakeAmmo)
-    self:SetNextPrimaryFire( CurTime() + self.Primary.Delay )
+    self:SetNextPrimaryFire(CurTime() + self.Primary.Delay)
 end
 
-function SWEP:PrimaryAttackShotgun()
+function SWEP:PrimaryAttackShotgun(secondary)
+    secondary = secondary || false
     if (!self:CanPrimaryAttack()) then return end
 
-    if (self:Clip1() > 0 && !(self:GetOwner():KeyDown(IN_ATTACK2))) then
+    if (self:Clip1() > 0 && (!(self:GetOwner():KeyDown(IN_ATTACK2)) || secondary == true)) then
         self:EmitPrimarySound()
         self:SetNextPrimaryFire(CurTime() + self.Primary.Delay)
         self:SetNextSecondaryFire(CurTime() + self.Primary.Delay)
@@ -220,7 +222,7 @@ function SWEP:PrimaryAttackMelee()
 end
 
 function SWEP:SecondaryAttack()
-    if (self.WeaponType == "shotgun") then
+    if (self.WeaponType == "shotgun" && self.Secondary.ShotgunDouble == true) then
         self:SecondaryAttackShotgun()
     end
 end
@@ -233,44 +235,10 @@ function SWEP:SecondaryAttackShotgun()
         return end
     return end
 
-    if (self:Clip1() == 1 && self:Clip1() > 0 && !(self:GetOwner():KeyDown(IN_ATTACK))) then
-        self:EmitPrimarySound()
-        self:SetNextPrimaryFire(CurTime() + self.Primary.Delay)
-        self:SetNextSecondaryFire(CurTime() + self.Primary.Delay)
-        self:TakePrimaryAmmo(self.Primary.TakeAmmo)
-        self.StartReload = false
-        self:SetNWBool("reloading", false)
+    if (self:Clip1() <= 1 && self:Clip1() > 0 && !(self:GetOwner():KeyDown(IN_ATTACK))) then
+        self:PrimaryAttackShotgun(true)
+    return end
 
-        self:ShootEffects()
-        timer.Simple( 0.3, function()
-            if (self:IsCurrentWeapon()) then
-                self:SendWeaponAnim(ACT_SHOTGUN_PUMP)
-            end
-        end)
-        timer.Simple( 0.3, function()
-            if (self:IsCurrentWeapon()) then
-                self:EmitSound(self.ShotgunPumpSound)
-            end
-        end)
-
-        local rnda = self.Primary.Recoil * -1
-        local rndb = self.Primary.Recoil * math.random(-2, 2)
-        if !self:GetOwner():IsNPC() then
-            self:GetOwner():ViewPunch( Angle( self.Primary.ShotgunRecoil,rndb,rnda ) )
-        end
-
-        local bullet = {}
-        bullet.Num = self.Primary.NumberofShots
-        bullet.Src = self:GetOwner():GetShootPos()
-        bullet.Dir = self:GetOwner():GetAimVector()
-        bullet.Spread = self.Primary.Spread
-        bullet.Tracer = self.Primary.TracerAmount
-        bullet.Force = self.Primary.Force
-        bullet.Damage = self.Primary.Damage
-        bullet.AmmoType = self.Primary.Ammo
-
-        self:GetOwner():FireBullets( bullet )
-    end
     if (self:Clip1() > 0 && !(self:GetOwner():KeyDown(IN_ATTACK))) then
         self:EmitSound(self.Secondary.Sound)
         self:SetNextPrimaryFire(CurTime() + self.Secondary.Delay)
@@ -321,20 +289,23 @@ function SWEP:Reload()
             self:EmitSound(self.ReloadSound)
         end
     end
+
     if (self.WeaponType == "shotgun") then
         if (self:GetNWBool("reloading", false)) then return end
-        if (self:Clip1() <= self.Primary.ClipSize - 1 && self:Ammo1() >= 1) then
+
+        if (self:Clip1() < self.Primary.ClipSize && self:Ammo1() > 0) then
             self:SetNWBool("reloading",true)
-            self:SetVar("reloadtimer",CurTime() + 0.2)
+            self:SetVar("reloadtimer", CurTime() + 0.2)
         end
     end
 end
 
 function SWEP:Think()
     if (self.WeaponType == "shotgun" && self:GetNWBool("reloading", false)) then
-        if self.StartReload == false then
+        if (self.StartReload == false) then
             self.StartReload = true
             self.CanReload = false
+
             self:SendWeaponAnim(ACT_SHOTGUN_RELOAD_START)
             timer.Simple(0.3, function()
                 if (self:IsCurrentWeapon()) then
@@ -342,11 +313,11 @@ function SWEP:Think()
                 end
             end)
         end
+
         if (self.CanReload == true && self:GetVar("reloadtimer", 0) < CurTime()) then
             if (self:Clip1() >= self.Primary.ClipSize || self:Ammo1() <= 0) then
                 self:SetNWBool("reloading", false)
-                return
-            end
+            return end
 
             self:SetVar("reloadtimer",CurTime() + 0.4)
             self:SendWeaponAnim(ACT_VM_RELOAD)
@@ -375,15 +346,16 @@ end
 
 function SWEP:Deploy()
     local vm = self:GetOwner():GetViewModel()
+    local drawseq = vm:LookupSequence(self.WeaponDeploy.Sequence)
 
-    vm:SendViewModelMatchingSequence(vm:LookupSequence(self.DrawSequence))
-    vm:SetPlaybackRate(self.DrawPlaybackSpeed)
+    vm:SendViewModelMatchingSequence(drawseq)
+    vm:SetPlaybackRate(self.WeaponDeploy.Speed)
 
-    self:SetNextPrimaryFire(CurTime() + self.DrawSequenceLength)
-    if (self.DeploySound != "") then
-        timer.Simple(self.DeploySoundDelay, function()
+    self:SetNextPrimaryFire(CurTime() + vm:SequenceDuration(drawseq))
+    if (self.WeaponDeploy.Sound != "") then
+        timer.Simple(self.WeaponDeploy.SoundDelay, function()
             if (self:IsCurrentWeapon()) then
-                self:EmitSound(self.DeploySound)
+                self:EmitSound(self.WeaponDeploy.Sound)
             end
         end)
     end

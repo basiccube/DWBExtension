@@ -33,9 +33,13 @@ SWEP.ViewModel = "models/weapons/v_crowbar.mdl" -- Weapon viewmodel.
 SWEP.WorldModel = "models/weapons/w_crowbar.mdl" -- Weapon worldmodel.
 SWEP.UseHands = false -- Use c_hands if the viewmodel supports it. Only works with c_ viewmodels, not v_ viewmodels!
 
-SWEP.DrawSequence = "draw" -- The animation to play when deploying/selecting the weapon.
-SWEP.DrawPlaybackSpeed = 1 -- The speed to play the draw animation at.
-SWEP.DrawSequenceLength = 0.7 -- How long does the animation need to play before being able to swing.
+SWEP.WeaponDeploy = {
+    Sequence = "draw",
+    Speed = 1,
+
+    Sound = "",
+    SoundDelay = 0.5,
+}
 
 SWEP.MeleeMissToIdleAnim = true -- Moves the weapon back to its idle position after a miss.
                                 -- Used by melee weapons that use HL2 crowbar animations.

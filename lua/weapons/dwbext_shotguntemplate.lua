@@ -12,8 +12,6 @@ SWEP.WeaponIcon = "weapons/swep" -- Weapon icon in HUD.
 
 SWEP.WeaponType = "shotgun" -- Weapon type. Can be the following: generic, shotgun, melee.
 
--- Sound that plays when the weapon clip is empty.
-SWEP.EmptySound = "Weapon_Shotgun.Empty"
 -- Shotgun pump sound.
 SWEP.ShotgunPumpSound = "Weapon_Shotgun.Special1"
 
@@ -46,6 +44,7 @@ SWEP.Secondary.ShotgunRecoil = -3.25
 SWEP.Secondary.Delay = 1.0
 SWEP.Secondary.Force = 2
 SWEP.Secondary.Sound = "Weapon_Shotgun.Double"
+SWEP.Secondary.ShotgunDouble = true -- HL2 Shotgun double barrel functionality
 
 SWEP.Slot = 2 -- Weapon slot. Can go from 0 to 5.
 SWEP.SlotPos = 3 -- How far down is the weapon in that slot?
@@ -61,9 +60,13 @@ SWEP.WorldModel = "models/weapons/w_shotgun.mdl" -- Weapon worldmodel.
 SWEP.UseHands = false -- Use c_hands if the viewmodel supports it. Only works with c_ viewmodels, not v_ viewmodels!
 SWEP.CSMuzzleFlashes = false -- Use CS:S muzzleflashes if the viewmodel is a CS:S viewmodel.
 
-SWEP.DrawSequence = "draw" -- The animation to play when deploying/selecting the weapon.
-SWEP.DrawPlaybackSpeed = 1 -- The speed to play the draw animation at.
-SWEP.DrawSequenceLength = 0.6 -- How long does the animation need to play before being able to fire the weapon.
+SWEP.WeaponDeploy = {
+    Sequence = "draw",
+    Speed = 1,
+
+    Sound = "",
+    SoundDelay = 0.5,
+}
 
 SWEP.HoldType = "shotgun" -- Weapon hold type.
 
