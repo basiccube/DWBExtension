@@ -4,7 +4,7 @@
 AddCSLuaFile()
 
 SWEP.PrintName = "DWBExt Melee" -- Weapon name in spawn menu and in weapon selection HUD.
-SWEP.Category = "Other" -- Spawn menu category.
+SWEP.Category = "[DWBExt] Base" -- Spawn menu category.
 SWEP.Spawnable = true -- Make the weapon appear in the spawn menu.
 SWEP.AdminOnly = false -- Is the weapon spawnable only for admins?
 SWEP.Base = "dwbext_base" -- The base the weapon uses. Do not change this!
@@ -20,7 +20,7 @@ SWEP.Primary.MeleeDistance = 80 -- The max distance you can swing.
 SWEP.Primary.Sound = "Weapon_Crowbar.Single"
 
 -- The angle your view gets punched.
-SWEP.Primary.ViewPunchAngle = Angle( 1.0 * math.random(-0.5, -1.5),0,0 )
+SWEP.Primary.ViewPunchAngle = Angle(1.0 * math.random(-0.5, -1.5), 0, 0)
 
 SWEP.Slot = 0 -- Weapon slot. Can go from 0 to 5.
 SWEP.SlotPos = 2 -- How far down is the weapon in that slot?

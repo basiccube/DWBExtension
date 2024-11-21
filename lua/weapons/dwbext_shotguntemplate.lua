@@ -4,7 +4,7 @@
 AddCSLuaFile()
 
 SWEP.PrintName = "DWBExt Shotgun" -- Weapon name in spawn menu and in weapon selection HUD.
-SWEP.Category = "Other" -- Spawn menu category.
+SWEP.Category = "[DWBExt] Base" -- Spawn menu category.
 SWEP.Spawnable = true -- Make the weapon appear in the spawn menu.
 SWEP.AdminOnly = false -- Is the weapon spawnable only for admins?
 SWEP.Base = "dwbext_base" -- The base the weapon uses. Do not change this!
@@ -20,7 +20,7 @@ SWEP.Primary.TakeAmmo = 1 -- How much ammo to take away when firing.
 SWEP.Primary.ClipSize = 6 -- The clip size.
 SWEP.Primary.Ammo = "Buckshot" -- The ammo type the primary attack uses.
 SWEP.Primary.DefaultClip = 6 -- The clip size the player starts with.
-SWEP.Primary.Spread = Vector( 0.8 * 0.1 , 0.8 * 0.1, 0) -- The bullet spread.
+SWEP.Primary.Spread = Vector(0.8 * 0.1, 0.8 * 0.1, 0) -- The bullet spread.
 SWEP.Primary.NumberofShots = 6 -- How many bullets does the weapon shoot?
 SWEP.Primary.TracerAmount = 6 -- How many bullet tracers does the weapon make?
 SWEP.Primary.Automatic = true -- Does the weapon automatically fire?
@@ -34,7 +34,7 @@ SWEP.Secondary.Damage = 10
 SWEP.Secondary.TakeAmmo = 2
 SWEP.Secondary.ClipSize = -1
 SWEP.Secondary.DefaultClip = -1
-SWEP.Secondary.Spread = Vector( 0.8 * 0.1 , 0.8 * 0.1, 0)
+SWEP.Secondary.Spread = Vector(0.8 * 0.1, 0.8 * 0.1, 0)
 SWEP.Secondary.NumberofShots = 12
 SWEP.Secondary.TracerAmount = 12
 SWEP.Secondary.Automatic = true

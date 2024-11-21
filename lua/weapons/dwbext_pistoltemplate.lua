@@ -4,7 +4,7 @@
 AddCSLuaFile()
 
 SWEP.PrintName = "DWBExt Pistol" -- Weapon name in spawn menu and in weapon selection HUD.
-SWEP.Category = "Other" -- Spawn menu category.
+SWEP.Category = "[DWBExt] Base" -- Spawn menu category.
 SWEP.Spawnable = true -- Make the weapon appear in the spawn menu.
 SWEP.AdminOnly = false -- Is the weapon spawnable only for admins?
 SWEP.Base = "dwbext_base" -- The base the weapon uses. Do not change this!
@@ -20,7 +20,7 @@ SWEP.Primary.TakeAmmo = 1 -- How much ammo to take away when firing.
 SWEP.Primary.ClipSize = 18 -- The clip size.
 SWEP.Primary.Ammo = "Pistol" -- The ammo type the primary attack uses.
 SWEP.Primary.DefaultClip = 18 -- The clip size the player starts with.
-SWEP.Primary.Spread = Vector( 0.2 * 0.1 , 0.2 * 0.1, 0) -- The bullet spread.
+SWEP.Primary.Spread = Vector(0.2 * 0.1, 0.2 * 0.1, 0) -- The bullet spread.
 SWEP.Primary.NumberofShots = 1 -- How many bullets does the weapon shoot?
 SWEP.Primary.TracerAmount = 1 -- How many bullet tracers does the weapon make?
 SWEP.Primary.Automatic = false -- Does the weapon automatically fire?
@@ -30,7 +30,7 @@ SWEP.Primary.Force = 4 -- Bullet force.
 SWEP.Primary.Sound = "Weapon_Pistol.Single" -- Weapon shoot sound.
 
 -- The angle your view gets punched.
-SWEP.Primary.ViewPunchAngle = Angle( -1.25,SWEP.Primary.Recoil * 1,SWEP.Primary.Recoil * -1 )
+SWEP.Primary.ViewPunchAngle = Angle(-1.25, SWEP.Primary.Recoil * 1, SWEP.Primary.Recoil * -1)
 
 SWEP.ViewEyePunch = false -- Should your eye position move when firing?
 
