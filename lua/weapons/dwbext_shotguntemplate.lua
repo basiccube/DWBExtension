@@ -1,64 +1,76 @@
--- basiccube's Default Weapon Base Extension
--- Shotgun template
+// basiccube's Default Weapon Base Extension
+// Shotgun template
 
 AddCSLuaFile()
 
-SWEP.PrintName = "DWBExt Shotgun" -- Weapon name in spawn menu and in weapon selection HUD.
-SWEP.Category = "[DWBExt] Base" -- Spawn menu category.
-SWEP.Spawnable = true -- Make the weapon appear in the spawn menu.
-SWEP.AdminOnly = false -- Is the weapon spawnable only for admins?
-SWEP.Base = "dwbext_base" -- The base the weapon uses. Do not change this!
-SWEP.WeaponIcon = "weapons/swep" -- Weapon icon in HUD.
+SWEP.PrintName = "DWBExt Shotgun"
+SWEP.Category = "[DWBExt] Base"
+SWEP.Spawnable = true
+SWEP.AdminOnly = false
+SWEP.Base = "dwbext_base"
+SWEP.WeaponIcon = "weapons/swep"
 
-SWEP.WeaponType = "shotgun" -- Weapon type. Can be the following: generic, shotgun, melee.
-
--- Shotgun pump sound.
 SWEP.ShotgunPumpSound = "Weapon_Shotgun.Special1"
 
-SWEP.Primary.Damage = 10 -- How much damage the primary attack does.
-SWEP.Primary.TakeAmmo = 1 -- How much ammo to take away when firing.
-SWEP.Primary.ClipSize = 6 -- The clip size.
-SWEP.Primary.Ammo = "Buckshot" -- The ammo type the primary attack uses.
-SWEP.Primary.DefaultClip = 6 -- The clip size the player starts with.
-SWEP.Primary.Spread = Vector(0.8 * 0.1, 0.8 * 0.1, 0) -- The bullet spread.
-SWEP.Primary.NumberofShots = 6 -- How many bullets does the weapon shoot?
-SWEP.Primary.TracerAmount = 6 -- How many bullet tracers does the weapon make?
-SWEP.Primary.Automatic = true -- Does the weapon automatically fire?
-SWEP.Primary.Recoil = 0.5 -- Weapon recoil. Due to current shotgun code, it is seperate from ShotgunRecoil.
-SWEP.Primary.ShotgunRecoil = -1.85 -- Shotgun WeaponType recoil. Different from Primary.Recoil because weird coding.
-SWEP.Primary.Delay = 0.85 -- How long do you have to wait before you can shoot again?
-SWEP.Primary.Force = 2 -- Bullet force.
-SWEP.Primary.Sound = "Weapon_Shotgun.Single" -- Weapon shoot sound.
+SWEP.Primary = {
+    Damage = 10,
+    Ammo = "Buckshot",
+    TakeAmmo = 1,
 
-SWEP.Secondary.Damage = 10
-SWEP.Secondary.TakeAmmo = 2
-SWEP.Secondary.ClipSize = -1
-SWEP.Secondary.DefaultClip = -1
-SWEP.Secondary.Spread = Vector(0.8 * 0.1, 0.8 * 0.1, 0)
-SWEP.Secondary.NumberofShots = 12
-SWEP.Secondary.TracerAmount = 12
-SWEP.Secondary.Automatic = true
-SWEP.Secondary.Ammo = "none"
-SWEP.Secondary.Recoil = .5
-SWEP.Secondary.ShotgunRecoil = -3.25
-SWEP.Secondary.Delay = 1.0
-SWEP.Secondary.Force = 2
-SWEP.Secondary.Sound = "Weapon_Shotgun.Double"
-SWEP.Secondary.ShotgunDouble = true -- HL2 Shotgun double barrel functionality
+    ClipSize = 6,
+    DefaultClip = 6,
+    Automatic = true,
+    Delay = 0.85,
 
-SWEP.Slot = 2 -- Weapon slot. Can go from 0 to 5.
-SWEP.SlotPos = 3 -- How far down is the weapon in that slot?
-SWEP.DrawAmmo = true -- Draw the ammo counter?
-SWEP.Weight = 10 -- The weight of the weapon.
-SWEP.AutoSwitchTo = false -- Switch to this weapon if the player runs out of ammo on their current weapon or gets this weapon.
-SWEP.AutoSwitchFrom = false -- Switch away from this weapon if the player runs out of ammo or gets another weapon.
+    Spread = Vector(0.8 * 0.1, 0.8 * 0.1, 0),
+    ViewPunchAngle = Angle(-1.85, 1, -0.5),
+    ViewPunchRandom = false,
+    ViewPunchRandomMin = 0,
+    ViewPunchRandomMax = 0,
+    ViewEyePunch = true,
 
-SWEP.ViewModelFlip = false -- Flip the viewmodel.
-SWEP.ViewModelFOV = 54 -- Viewmodel FOV.
-SWEP.ViewModel = "models/weapons/v_shotgun.mdl" -- Weapon viewmodel.
-SWEP.WorldModel = "models/weapons/w_shotgun.mdl" -- Weapon worldmodel.
-SWEP.UseHands = false -- Use c_hands if the viewmodel supports it. Only works with c_ viewmodels, not v_ viewmodels!
-SWEP.CSMuzzleFlashes = false -- Use CS:S muzzleflashes if the viewmodel is a CS:S viewmodel.
+    NumberofShots = 6,
+    TracerAmount = 6,
+    Force = 2,
+    Sound = "Weapon_Shotgun.Single",
+}
+
+SWEP.Secondary = {
+    Damage = 10,
+    Ammo = "none",
+    TakeAmmo = 2,
+
+    ClipSize = -1,
+    DefaultClip = -1,
+    Automatic = true,
+    Delay = 1.0,
+
+    Spread = Vector(0.8 * 0.1, 0.8 * 0.1, 0),
+    ViewPunchAngle = Angle(-3.25, 0.5, -0.5),
+    ViewPunchRandom = false,
+    ViewPunchRandomMin = 0,
+    ViewPunchRandomMax = 0,
+    ViewEyePunch = true,
+
+    NumberofShots = 12,
+    TracerAmount = 12,
+    Force = 2,
+    Sound = "Weapon_Shotgun.Double",
+}
+
+SWEP.Slot = 2
+SWEP.SlotPos = 3
+SWEP.DrawAmmo = true
+SWEP.Weight = 10
+SWEP.AutoSwitchTo = false
+SWEP.AutoSwitchFrom = false
+
+SWEP.ViewModelFlip = false
+SWEP.ViewModelFOV = 54
+SWEP.ViewModel = "models/weapons/v_shotgun.mdl"
+SWEP.WorldModel = "models/weapons/w_shotgun.mdl"
+SWEP.UseHands = false
+SWEP.CSMuzzleFlashes = false
 
 SWEP.WeaponDeploy = {
     Sequence = "draw",
@@ -68,6 +80,23 @@ SWEP.WeaponDeploy = {
     SoundDelay = 0.5,
 }
 
-SWEP.HoldType = "shotgun" -- Weapon hold type.
+SWEP.HoldType = "shotgun"
 
-SWEP.FiresUnderwater = false -- Can this weapon be fired underwater?
+SWEP.FiresUnderwater = false
+
+function SWEP:PrimaryAttack()
+    self:PrimaryAttackShotgun()
+end
+
+function SWEP:SecondaryAttack()
+    self:ShotgunDoubleAttack()
+end
+
+function SWEP:Reload()
+    self:ShotgunReload()
+end
+
+function SWEP:Think()
+    self:ShotgunThink()
+    self:BaseThink()
+end

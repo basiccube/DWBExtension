@@ -1,52 +1,53 @@
--- basiccube's Default Weapon Base Extension
--- Pistol template
+// basiccube's Default Weapon Base Extension
+// Pistol template
 
 AddCSLuaFile()
 
-SWEP.PrintName = "DWBExt Pistol" -- Weapon name in spawn menu and in weapon selection HUD.
-SWEP.Category = "[DWBExt] Base" -- Spawn menu category.
-SWEP.Spawnable = true -- Make the weapon appear in the spawn menu.
-SWEP.AdminOnly = false -- Is the weapon spawnable only for admins?
-SWEP.Base = "dwbext_base" -- The base the weapon uses. Do not change this!
-SWEP.WeaponIcon = "weapons/swep" -- Weapon icon in HUD.
+SWEP.PrintName = "DWBExt Pistol"
+SWEP.Category = "[DWBExt] Base"
+SWEP.Spawnable = true
+SWEP.AdminOnly = false
+SWEP.Base = "dwbext_base"
+SWEP.WeaponIcon = "weapons/swep"
 
-SWEP.WeaponType = "generic" -- Weapon type. Can be the following: generic, shotgun, melee.
-
--- Reload sound if the viewmodel doesn't have one. Enable HasReloadSound for it to work.
 SWEP.ReloadSound = "Weapon_Pistol.Reload"
 
-SWEP.Primary.Damage = 4 -- How much damage the primary attack does.
-SWEP.Primary.TakeAmmo = 1 -- How much ammo to take away when firing.
-SWEP.Primary.ClipSize = 18 -- The clip size.
-SWEP.Primary.Ammo = "Pistol" -- The ammo type the primary attack uses.
-SWEP.Primary.DefaultClip = 18 -- The clip size the player starts with.
-SWEP.Primary.Spread = Vector(0.2 * 0.1, 0.2 * 0.1, 0) -- The bullet spread.
-SWEP.Primary.NumberofShots = 1 -- How many bullets does the weapon shoot?
-SWEP.Primary.TracerAmount = 1 -- How many bullet tracers does the weapon make?
-SWEP.Primary.Automatic = false -- Does the weapon automatically fire?
-SWEP.Primary.Recoil = 0.5 -- Weapon recoil.
-SWEP.Primary.Delay = 0.1 -- How long do you have to wait before you can shoot again?
-SWEP.Primary.Force = 4 -- Bullet force.
-SWEP.Primary.Sound = "Weapon_Pistol.Single" -- Weapon shoot sound.
+SWEP.Primary = {
+    Damage = 4,
+    Ammo = "Pistol",
+    TakeAmmo = 1,
 
--- The angle your view gets punched.
-SWEP.Primary.ViewPunchAngle = Angle(-1.25, SWEP.Primary.Recoil * 1, SWEP.Primary.Recoil * -1)
+    ClipSize = 18,
+    DefaultClip = 18,
+    Automatic = false,
+    Delay = 0.1,
 
-SWEP.ViewEyePunch = false -- Should your eye position move when firing?
+    Spread = Vector(0.2 * 0.1, 0.2 * 0.1, 0),
+    ViewPunchAngle = Angle(-1.25, 0.1, -0.25),
+    ViewPunchRandom = true,
+    ViewPunchRandomMin = 0.5,
+    ViewPunchRandomMax = 1,
+    ViewEyePunch = false,
 
-SWEP.Slot = 1 -- Weapon slot. Can go from 0 to 5.
-SWEP.SlotPos = 2 -- How far down is the weapon in that slot?
-SWEP.DrawAmmo = true -- Draw the ammo counter?
-SWEP.Weight = 5 -- The weight of the weapon.
-SWEP.AutoSwitchTo = false -- Switch to this weapon if the player runs out of ammo on their current weapon or gets this weapon.
-SWEP.AutoSwitchFrom = false -- Switch away from this weapon if the player runs out of ammo or gets another weapon.
+    NumberofShots = 1,
+    TracerAmount = 1,
+    Force = 4,
+    Sound = "Weapon_Pistol.Single",
+}
 
-SWEP.ViewModelFlip = false -- Flip the viewmodel.
-SWEP.ViewModelFOV = 54 -- Viewmodel FOV.
-SWEP.ViewModel = "models/weapons/v_pistol.mdl" -- Weapon viewmodel.
-SWEP.WorldModel = "models/weapons/w_pistol.mdl" -- Weapon worldmodel.
-SWEP.UseHands = false -- Use c_hands if the viewmodel supports it. Only works with c_ viewmodels, not v_ viewmodels!
-SWEP.CSMuzzleFlashes = false -- Use CS:S muzzleflashes if the viewmodel is a CS:S viewmodel.
+SWEP.Slot = 1
+SWEP.SlotPos = 2
+SWEP.DrawAmmo = true
+SWEP.Weight = 5
+SWEP.AutoSwitchTo = false
+SWEP.AutoSwitchFrom = false
+
+SWEP.ViewModelFlip = false
+SWEP.ViewModelFOV = 54
+SWEP.ViewModel = "models/weapons/v_pistol.mdl"
+SWEP.WorldModel = "models/weapons/w_pistol.mdl"
+SWEP.UseHands = false
+SWEP.CSMuzzleFlashes = false
 
 SWEP.WeaponDeploy = {
     Sequence = "draw",
@@ -56,6 +57,18 @@ SWEP.WeaponDeploy = {
     SoundDelay = 0.5,
 }
 
-SWEP.HoldType = "pistol" -- Weapon hold type.
+SWEP.HoldType = "pistol"
 
-SWEP.FiresUnderwater = true -- Can this weapon be fired underwater?
+SWEP.FiresUnderwater = true
+
+function SWEP:PrimaryAttack()
+    self:PrimaryAttackGeneric()
+end
+
+function SWEP:Reload()
+    self:GenericReload()
+end
+
+function SWEP:Think()
+    self:BaseThink()
+end
