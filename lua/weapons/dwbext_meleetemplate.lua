@@ -4,7 +4,7 @@
 AddCSLuaFile()
 
 SWEP.PrintName = "DWBExt Melee"
-SWEP.Category = "[DWBExt] Base"
+SWEP.Category = "DWBExt: Base"
 SWEP.Spawnable = true
 SWEP.AdminOnly = false
 SWEP.Base = "dwbext_base"
@@ -20,7 +20,7 @@ SWEP.Primary = {
     ViewPunchRandomMin = -0.5,
     ViewPunchRandomMax = -1.5,
 
-    Force = 1,
+    Force = 200,
     MeleeDistance = 80,
     Sound = "Weapon_Crowbar.Single",
 }

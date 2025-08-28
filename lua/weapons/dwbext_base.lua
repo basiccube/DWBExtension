@@ -3,7 +3,7 @@
 AddCSLuaFile()
 
 SWEP.PrintName = "Default Weapon Base Extension"
-SWEP.Category = "[DWBExt] Base"
+SWEP.Category = "DWBExt: Base"
 SWEP.BounceWeaponIcon = false
 SWEP.DrawWeaponInfoBox = false
 SWEP.Spawnable = false
@@ -112,8 +112,6 @@ function SWEP:DoViewPunch(secondary)
         punchangle = Angle(punchangle.Pitch * math.Rand(punchrandommin, punchrandommax), punchangle.Yaw, punchangle.Roll)
     end
 
-    print(punchangle.Pitch)
-
     if !self:GetOwner():IsNPC() then
         self:GetOwner():ViewPunch(punchangle)
         if vieweyepunch then
@@ -153,7 +151,7 @@ function SWEP:PrimaryAttackGeneric()
 
     self:ShootEffects()
     self:GetOwner():FireBullets(bullet)
-    self:EmitPrimarySound()
+    self:EmitSound(self.Primary.Sound)
     self:DoViewPunch()
 
     self:TakePrimaryAmmo(self.Primary.TakeAmmo)
@@ -165,7 +163,7 @@ function SWEP:PrimaryAttackShotgun(secondary)
     if !self:CanPrimaryAttack() then return end
 
     if (self:Clip1() > 0 && (!self:GetOwner():KeyDown(IN_ATTACK2) || secondary)) then
-        self:EmitPrimarySound()
+        self:EmitSound(self.Primary.Sound)
         self:SetNextPrimaryFire(CurTime() + self.Primary.Delay)
         self:SetNextSecondaryFire(CurTime() + self.Primary.Delay)
         self:TakePrimaryAmmo(self.Primary.TakeAmmo)
@@ -177,10 +175,6 @@ function SWEP:PrimaryAttackShotgun(secondary)
         timer.Simple(0.3, function()
             if self:IsCurrentWeapon() then
                 self:SendWeaponAnim(ACT_SHOTGUN_PUMP)
-            end
-        end)
-        timer.Simple(0.3, function()
-            if self:IsCurrentWeapon() then
                 self:EmitSound(self.ShotgunPumpSound)
             end
         end)
@@ -203,26 +197,37 @@ function SWEP:PrimaryAttackMelee()
     self:SetNextPrimaryFire(CurTime() + self.Primary.Delay)
     local trace = self:GetOwner():GetEyeTrace()
 
-    // this has issues
     if (trace.HitPos:Distance(self:GetOwner():GetShootPos()) <= self.Primary.MeleeDistance) then
         self:GetOwner():SetAnimation(PLAYER_ATTACK1)
         self:SendWeaponAnim(ACT_VM_HITCENTER)
 
-        local bullet = {}
-        bullet.Num = 1
-        bullet.Src = self:GetOwner():GetShootPos()
-        bullet.Dir = self:GetOwner():GetAimVector()
-        bullet.Spread = Vector(0, 0, 0)
-        bullet.Tracer = 0
-        bullet.Force  = self.Primary.Force
-        bullet.Damage = self.Primary.Damage
-        self:GetOwner():FireBullets(bullet)
-
         self:EmitSound("Weapon_Crowbar.Melee_Hit")
-        self:EmitPrimarySound()
+        self:EmitSound(self.Primary.Sound)
         self:DoViewPunch()
+
+        local dmg = self.Primary.Damage
+        local dmginfo = DamageInfo()
+        dmginfo:SetDamage(dmg)
+        dmginfo:SetDamageType(DMG_CLUB)
+        dmginfo:SetDamagePosition(trace.HitPos)
+        dmginfo:SetDamageForce((trace.Normal * dmg) * self.Primary.Force)
+        dmginfo:SetAttacker(self:GetOwner())
+        dmginfo:SetInflictor(self)
+
+        if (trace.Entity != NULL) then
+            local edata = EffectData()
+            edata:SetEntity(trace.Entity)
+            edata:SetOrigin(trace.HitPos)
+            edata:SetStart(trace.StartPos)
+            edata:SetSurfaceProp(trace.SurfaceProps)
+            edata:SetDamageType(DMG_CLUB)
+            edata:SetHitBox(trace.HitBox)
+            util.Effect("Impact", edata)
+
+            trace.Entity:DispatchTraceAttack(dmginfo, trace)
+        end
     else
-        self:EmitPrimarySound()
+        self:EmitSound(self.Primary.Sound)
 
         self:GetOwner():SetAnimation(PLAYER_ATTACK1)
         self:SendWeaponAnim(ACT_VM_MISSCENTER)
@@ -237,11 +242,14 @@ function SWEP:PrimaryAttackMelee()
     end
 end
 
+function SWEP:PrimaryAttack()
+end
+
 function SWEP:SecondaryAttack()
 end
 
 function SWEP:ShotgunDoubleAttack()
-    if (self:Clip1() == 0) then
+    if (self:Clip1() <= 0) then
         if (!self:CanPrimaryAttack()) then
             self:SetNextPrimaryFire(CurTime() + self.Secondary.Delay)
             self:SetNextSecondaryFire(CurTime() + self.Secondary.Delay)
@@ -267,10 +275,6 @@ function SWEP:ShotgunDoubleAttack()
         timer.Simple(0.3, function()
             if self:IsCurrentWeapon() then
                 self:SendWeaponAnim(ACT_SHOTGUN_PUMP)
-            end
-        end)
-        timer.Simple(0.3, function()
-            if self:IsCurrentWeapon() then
                 self:EmitSound(self.ShotgunPumpSound)
             end
         end)
@@ -293,7 +297,6 @@ function SWEP:GenericReload()
     if (self:GetNextPrimaryFire() - CurTime() > 0.25) then return end
 
     self:DefaultReload(ACT_VM_RELOAD)
-
     if (self.ReloadSound != "" && self:Clip1() < self.Primary.ClipSize && self:Ammo1() > 0) then
         self:EmitSound(self.ReloadSound)
     end
@@ -309,7 +312,8 @@ function SWEP:ShotgunReload()
 end
 
 function SWEP:BaseThink()
-    if (self:GetActivity() != ACT_VM_RELOAD && self:GetActivity() != ACT_VM_SECONDARYATTACK && GetConVar("dwbext_autoreload"):GetBool() && !self:GetNWBool("reloading", false) && self:GetOwner():Alive() && self:Clip1() == 0 && self:Ammo1() > 0) then
+    local act = self:GetActivity()
+    if (GetConVar("dwbext_autoreload"):GetBool() && act != ACT_VM_RELOAD && act != ACT_VM_SECONDARYATTACK && !self:GetNWBool("reloading", false) && self:GetOwner():Alive() && self:Clip1() <= 0 && self:Ammo1() > 0) then
         timer.Simple(0.45, function()
             if (self:IsCurrentWeapon() && self:GetActivity() != ACT_VM_RELOAD && !self:GetNWBool("reloading", false) && self:GetOwner():Alive()) then
                 self:Reload()
@@ -321,7 +325,7 @@ function SWEP:BaseThink()
 end
 
 function SWEP:ShotgunThink()
-    // this needs to be redone
+    // bad and is buggy
     if self:GetNWBool("reloading", false) then
         if !self.StartReload then
             self.StartReload = true

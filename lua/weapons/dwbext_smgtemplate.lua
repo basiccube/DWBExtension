@@ -4,7 +4,7 @@
 AddCSLuaFile()
 
 SWEP.PrintName = "DWBExt SMG"
-SWEP.Category = "[DWBExt] Base"
+SWEP.Category = "DWBExt: Base"
 SWEP.Spawnable = true
 SWEP.AdminOnly = false
 SWEP.Base = "dwbext_base"
