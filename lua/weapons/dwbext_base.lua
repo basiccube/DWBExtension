@@ -13,6 +13,7 @@ SWEP.WeaponIcon = "weapons/swep"
 
 SWEP.ReloadSound = ""
 SWEP.ShotgunPumpSound = ""
+SWEP.MeleeHitSound = "Weapon_Crowbar.Melee_Hit"
 
 SWEP.Primary = {
     Damage = 0,
@@ -112,15 +113,13 @@ function SWEP:DoViewPunch(secondary)
         punchangle = Angle(punchangle.Pitch * math.Rand(punchrandommin, punchrandommax), punchangle.Yaw, punchangle.Roll)
     end
 
-    if !self:GetOwner():IsNPC() then
-        self:GetOwner():ViewPunch(punchangle)
-        if vieweyepunch then
-            local ViewEyes = self:GetOwner():EyeAngles()
-            ViewEyes.Pitch = ViewEyes.Pitch + punchangle.Pitch
-            ViewEyes.Yaw = ViewEyes.Yaw + punchangle.Yaw
+    self:GetOwner():ViewPunch(punchangle)
+    if vieweyepunch then
+        local ViewEyes = self:GetOwner():EyeAngles()
+        ViewEyes.Pitch = ViewEyes.Pitch + punchangle.Pitch
+        ViewEyes.Yaw = ViewEyes.Yaw + punchangle.Yaw
 
-            self:GetOwner():SetEyeAngles(ViewEyes)
-        end
+        self:GetOwner():SetEyeAngles(ViewEyes)
     end
 end
 
@@ -152,7 +151,9 @@ function SWEP:PrimaryAttackGeneric()
     self:ShootEffects()
     self:GetOwner():FireBullets(bullet)
     self:EmitSound(self.Primary.Sound)
-    self:DoViewPunch()
+    if !self:GetOwner():IsNPC() then
+        self:DoViewPunch()
+    end
 
     self:TakePrimaryAmmo(self.Primary.TakeAmmo)
     self:SetNextPrimaryFire(CurTime() + self.Primary.Delay)
@@ -171,7 +172,9 @@ function SWEP:PrimaryAttackShotgun(secondary)
         self:SetNWBool("reloading", false)
 
         self:ShootEffects()
-        self:DoViewPunch()
+        if !self:GetOwner():IsNPC() then
+            self:DoViewPunch()
+        end
         timer.Simple(0.3, function()
             if self:IsCurrentWeapon() then
                 self:SendWeaponAnim(ACT_SHOTGUN_PUMP)
@@ -201,9 +204,11 @@ function SWEP:PrimaryAttackMelee()
         self:GetOwner():SetAnimation(PLAYER_ATTACK1)
         self:SendWeaponAnim(ACT_VM_HITCENTER)
 
-        self:EmitSound("Weapon_Crowbar.Melee_Hit")
+        self:EmitSound(self.MeleeHitSound)
         self:EmitSound(self.Primary.Sound)
-        self:DoViewPunch()
+        if !self:GetOwner():IsNPC() then
+            self:DoViewPunch()
+        end
 
         local dmg = self.Primary.Damage
         local dmginfo = DamageInfo()
@@ -269,7 +274,9 @@ function SWEP:ShotgunDoubleAttack()
         self:SetNWBool("reloading", false)
 
         self:SendWeaponAnim(ACT_VM_SECONDARYATTACK)
-        self:DoViewPunch(true)
+        if !self:GetOwner():IsNPC() then
+            self:DoViewPunch(true)
+        end
         self:GetOwner():MuzzleFlash()
         self:GetOwner():SetAnimation(PLAYER_ATTACK1)
         timer.Simple(0.3, function()
